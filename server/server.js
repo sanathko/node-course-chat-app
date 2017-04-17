@@ -24,7 +24,11 @@ io.on('connection', (socket) => {
     if (!isRealString(params.name) || !isRealString(params.room)) {
       return callback('name and room name is required');
     }
-
+    if (users.getUserByName(params.name)) {
+      return callback(`User ${params.name} exists. Please enter a different username`);
+    }
+    //make chat rooms case insensitive
+    params.room = params.room.toLowerCase();
     socket.join(params.room);
     users.removeUser(socket.id);
     users.addUser(socket.id, params.name, params.room);
